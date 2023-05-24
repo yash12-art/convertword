@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="style.css">
+    <title>Word to PDF Converter</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+</head>
+<body classname="allign">
+    <div class="container">
+        <h1>Word to PDF Converter</h1>
+        <form id="uploadForm" action="https://2dflhifq34.execute-api.ap-south-1.amazonaws.com/convert" method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="file">Select a Word document:</label>
+                <input type="file" name="file" id="file" class="form-control-file" accept=".docx">
+            </div>
+            <button type="submit" class="btn btn-primary">Convert</button>
+        </form>
+        <div id="message" class="mt-3"></div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script>
+        $(function() {
+            $('#uploadForm').submit(function(e) {
+                e.preventDefault();
+                var form = $(this)[0];
+                var formData = new FormData(form);
+
+                $.ajax({
+                    url: $(this).attr('action'),
+                    type: $(this).attr('method'),
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        $('#message').text(response.body).removeClass('text-danger').addClass('text-success');
+                        form.reset();
+                    },
+                    error: function(xhr, status, error) {
+                        $('#message').text(xhr.responseText).removeClass('text-success').addClass('text-danger');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
